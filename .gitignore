@@ -116,7 +116,15 @@ skills/loop-verifier/
 skills/loop-budget/
 
 # 10. Temporary Files, Python Cache & Local Drafts
+DESIGN.md
+[Dd]esign*.md
+ARTICLE.md
+[Aa]rticle*.md
+[Dd]raft*.md
+[Nn]otes*.md
 articles/
+drafts/
+social-posts/
 tmp/
 temp/
 *.tmp

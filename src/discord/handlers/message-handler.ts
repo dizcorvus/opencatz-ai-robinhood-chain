@@ -80,7 +80,7 @@ export async function handleControlRoomMessage(
     const foundDomain = agentDomains.find(d => lowerQuery.includes(d)) || 'meme-robinhood';
     await message.reply(`⚡ **OPENCATZ ON-DEMAND SCREENING TRIGGERED** for \`${foundDomain.toUpperCase()}\`...\nScreening pass in progress.`);
     const result = await toolRegistry.executeToolCall('trigger_screening_pass', { agentId: foundDomain });
-    await message.reply(`✅ **SCREENING COMPLETE** for \`${foundDomain.toUpperCase()}\`: Found **${result.data?.length || 0}** signals passing 3-Layer Swarm Filter.`);
+    await message.reply(`✅ **SCREENING COMPLETE** for \`${foundDomain.toUpperCase()}\`: Found **${result.data?.length || 0}** signals passing 3-Layer Multi-Agent Filter.`);
     return;
   }
 
@@ -361,7 +361,7 @@ ${activeAgentsLine}
         `• **Active API Key Hint:** \`${keyHint}\`\n` +
         `• **Error Detail:** ⚠️ \`${error.message || 'Unknown Error'}\`\n\n` +
         `💡 **Fix:** Run \`opencatz wizard\` on the VPS to refresh your API keys.\n\n` +
-        `🛡️ **Local Autonomous System:** 95% of OpenCatz's local engine (3 Sub-Agents, GoPlus/GMGN audits, Swarm Consensus, \`/swap\`, \`/alert\`) keeps operating 100% smoothly!`
+        `🛡️ **Local Autonomous System:** 95% of OpenCatz's local engine (5 Specialist Agents, GoPlus/GMGN audits, Multi-Agent Consensus, \`/swap\`, \`/alert\`) keeps operating 100% smoothly!`
       );
       return;
     }

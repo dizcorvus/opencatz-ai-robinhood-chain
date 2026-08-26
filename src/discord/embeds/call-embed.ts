@@ -275,7 +275,7 @@ export function buildCallEmbed(payload: CallSignalPayload) {
   if (payload.smartMoneyInfo) {
     embed.addFields({
       name: '🧠 Smart Money Tracking & AI Consensus',
-      value: `${payload.smartMoneyInfo}\n🟢 **Swarm Consensus Score:** **${confidenceStr} (PASSED)**`,
+      value: `${payload.smartMoneyInfo}\n🟢 **Consensus Confidence Score:** **${confidenceStr} (PASSED)**`,
       inline: false,
     });
   }

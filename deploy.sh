@@ -24,7 +24,7 @@ warn() { printf "%b\n" " ${YELLOW}⚠ $1${NC}"; }
 printf "\n"
 printf "%b\n" "${LIME}${BOLD}       /\\_____/\\${NC}"
 printf "%b\n" "${LIME}${BOLD}      /  ${PINK}■${LIME}   ${PINK}■${LIME}  \\      ${LIME}🐾 OPENCATZ AI — 24/7 PM2 DEPLOYER 🐾${NC}"
-printf "%b\n" "${LIME}${BOLD}     ( ==  ${PINK}^${LIME}  == )     ${CYAN}Autonomous Multi-Agent Trading Swarm${NC}"
+printf "%b\n" "${LIME}${BOLD}     ( ==  ${PINK}^${LIME}  == )     ${CYAN}Autonomous Multi-Agent Crypto Intelligence${NC}"
 printf "%b\n" "${LIME}${BOLD}      )    ${YELLOW}~${LIME}    (      ${LAVENDER}Robinhood Chain EVM L2 • Chain ID: 4663${NC}"
 printf "%b\n" "${LIME}${BOLD}     (   _____   )     ${GOLD}\"Chill trades, 9 lives, sharp alpha.\"${NC}"
 printf "%b\n" "${LIME}${BOLD}    ( (  )   (  ) )${NC}"

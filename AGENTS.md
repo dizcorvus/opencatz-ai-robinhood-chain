@@ -9,7 +9,7 @@ Welcome to **Opencatz AI (Robinhood Chain Edition)**! This document outlines pro
 **Opencatz AI (Robinhood Chain Edition)** is an autonomous, multi-agent crypto intelligence and trading ecosystem specialized for **Robinhood Chain (EVM)** and operated through a **Discord Command Center**, **Terminal TUI**, and **Telegram Notification Bridge**.
 
 - **Core Hub Agent (`#opencatz-control-room`):** Handles user chat, configuration, portfolio tracking, global risk management, custom price alerts (`/alert`), trade execution, and natural language trade audits.
-- **Swarm Consensus Engine:** Evaluates candidate signals through a 3-Layer Filter (Quant & Liquidity, Catalyst & Sentiment, Security Audit) requiring a **>= 80% Confidence Score** before posting to Discord.
+- **Multi-Agent Consensus Engine:** Evaluates candidate signals through a 3-Layer Filter (Quant & Liquidity, Catalyst & Sentiment, Security Audit) requiring a **>= 80% Confidence Score** before posting to Discord.
 - **Specialist Screening Sub-Agents:** Run 24/7 background screening (on-demand) and post call signals to dedicated Discord channels (exactly 5 domains):
   - `#call-meme-robinhood` (Robinhood Chain EVM DEX tokens / GMGN OpenAPI + GoPlus security)
   - `#call-lp-robinhood` (Robinhood Chain Concentrated Liquidity Velocity Signals / Krystal Cloud)
@@ -28,7 +28,7 @@ Welcome to **Opencatz AI (Robinhood Chain Edition)**! This document outlines pro
 - **Target Chain:** Robinhood Chain (EVM L2) — chain ID **4663**, native token **ETH**, canonical RPC `https://rpc.mainnet.chain.robinhood.com`, explorer `https://robinhoodchain.blockscout.com`
 - **Primary DEX Venue:** Uniswap V3 Router (Robinhood Chain EVM L2 #4663) — primary venue for meme tokens, swaps, and LP positions. Single-chain focus (cross-chain bridge removed).
 - **Execution Modes (`EXECUTION_MODE`):**
-  - `AUTO_EXECUTE`: Real on-chain trading via Uniswap V3 / Viem client when Swarm Consensus $\ge 80\%$ and Risk Manager checks pass. Requires `EVM_PRIVATE_KEY`.
+  - `AUTO_EXECUTE`: Real on-chain trading via Uniswap V3 / Viem client when Multi-Agent Consensus $\ge 80\%$ and Risk Manager checks pass. Requires `EVM_PRIVATE_KEY`.
   - `DRY_RUN`: Realistic market simulation using real-time quotes, fees, and price data from Uniswap V3 API / DexScreener. Requires public `EVM_WALLET_ADDRESS` (Private Key optional). Fills logged to `database/opencatz_state.json`.
   - `SIGNAL_ONLY`: Intelligence Hub mode posting screening call cards to Discord and auto-tracking wallet position holdings via `EVM_WALLET_ADDRESS`.
 - **Blockchain & Crypto Web3 SDKs:**
@@ -134,19 +134,19 @@ Opencatz AI (Robinhood Chain)/
 ## 4. Coding Conventions & Best Practices
 
 1. **Modular Multi-Agent Isolation:**
-   - Keep screening logic decoupled from execution logic. Screening agents MUST pass candidate signals to the `Swarm Consensus Engine` before emitting to Multi-Platform dispatch channels (Discord, Terminal TUI, Telegram) or `OpenCatz Core Hub`.
+   - Keep screening logic decoupled from execution logic. Screening agents MUST pass candidate signals to the `Multi-Agent Consensus Engine` before emitting to Multi-Platform dispatch channels (Discord, Terminal TUI, Telegram) or `OpenCatz Core Hub`.
 2. **Safety & Execution Modes First:**
    - Every trading adapter MUST check `getExecutionMode()`. Live trades occur only in `AUTO_EXECUTE` mode with verified private keys. `DRY_RUN` uses real Uniswap API market pricing without broadcasting. `SIGNAL_ONLY` tracks holdings without executing.
-3. **Swarm Consensus Validation:**
+3. **Multi-Agent Consensus Validation:**
    - Require >= 80% confidence score across Quant, Catalyst, and Security audits before delivering signal cards.
 4. **Strict TypeScript Typing:**
-   - Avoid using `any`. Define clear interfaces for Token Signals, Audit Results, Swarm Scores, Discord Command Contexts, and Position States.
+   - Avoid using `any`. Define clear interfaces for Token Signals, Audit Results, Consensus Scores, Discord Command Contexts, and Position States.
 5. **Multi-Platform UX Standards (Discord, Terminal TUI, Telegram):**
    - Discord: Rich Embeds with 8-bit OpenCats color coding (🟢 `#CCFF00` Hero Green, 🌸 `#FFB7B2` Meme, 🔮 `#D6C7FF` NFT, 🌊 `#80DEEA` LP, ☀️ `#FFF59D` Alpha, 🔴 `#E53935` Risk/Warning).
    - Terminal TUI: Interactive 24-bit TrueColor ANSI interface with on-demand screening passes, live CA token audits, strategy tuner, and treasury manager (`opencatz terminal`).
    - Telegram: Markdown broadcast cards with quick inline callback buttons.
 6. **Customizable Screening Strategies:**
-   - Screening strategies are fully customizable (wizard STEP 5.5: loosened default / standard / custom prompt / numeric editor); custom prompts compile to validated strategy `.mjs` at first boot with default fallback; swarm >= 80% floor never lowered.
+   - Screening strategies are fully customizable (wizard STEP 5.5: loosened default / standard / custom prompt / numeric editor); custom prompts compile to validated strategy `.mjs` at first boot with default fallback; consensus >= 80% floor never lowered.
 
 ---
 

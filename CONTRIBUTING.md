@@ -46,8 +46,8 @@ npm test
 
 ## 📐 Coding Conventions & Guidelines
 
-1. **Strict TypeScript Typing**: Avoid using `any`. Define clear interfaces for Token Signals, Audit Results, Swarm Scores, and Discord Contexts.
-2. **Sub-Agent Isolation**: Keep screening sub-agents decoupled from trade execution routines. Sub-agents must submit candidate signals to the `Swarm Consensus Engine` before emitting to Discord or Telegram channels.
+1. **Strict TypeScript Typing**: Avoid using `any`. Define clear interfaces for Token Signals, Audit Results, Consensus Scores, and Discord Contexts.
+2. **Sub-Agent Isolation**: Keep screening sub-agents decoupled from trade execution routines. Sub-agents must submit candidate signals to the `Multi-Agent Consensus Engine` before emitting to Discord or Telegram channels.
 3. **Safety & Execution Modes First**: Always respect `getExecutionMode()`. Live trades must occur strictly in `AUTO_EXECUTE` mode with verified private keys. `DRY_RUN` simulates fills using live market pricing without broadcasting.
 4. **Deterministic Filtering**: Keep screening and security audits fast, local, and token-cost-optimized. Reserve LLM calls for complex NLU reasoning in the command room.
 5. **Full Test Coverage**: Every new feature or bugfix should include corresponding unit tests in `tests/`. Verify `npm test` passes 100% before opening a Pull Request.

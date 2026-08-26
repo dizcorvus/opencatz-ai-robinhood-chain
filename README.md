@@ -12,7 +12,7 @@
 
 **Autonomous Multi-Agent Crypto Intelligence & Trading Ecosystem** — built exclusively for **Robinhood Chain (EVM L2, chain ID 4663, native ETH)**, operated through a **Discord Command Center**, an **Interactive Terminal TUI**, and a **Telegram Notification Bridge**.
 
-Opencatz AI separates **24/7 market screening + 3-Layer Swarm Consensus signal generation** from **execution** — signal cards are delivered to Discord with audit data and one-click links, while execution stays under your control via `DRY_RUN` and manual confirmation.
+Opencatz AI separates **24/7 market screening + 3-Layer Multi-Agent Consensus signal generation** from **execution** — signal cards are delivered to Discord with audit data and one-click links, while execution stays under your control via `DRY_RUN` and manual confirmation.
 
 [![Domain](https://img.shields.io/badge/Domain-opencatz.xyz-brightgreen.svg)](https://opencatz.xyz)
 [![Chain](https://img.shields.io/badge/Robinhood%20Chain-4663%20%7C%20ETH-7b5cff.svg)](https://robinhoodchain.blockscout.com)
@@ -36,7 +36,7 @@ Opencatz AI separates **24/7 market screening + 3-Layer Swarm Consensus signal g
 - 🐦 **Official X (Twitter):** [@pxidentities](https://x.com/pxidentities/)
 - 📖 **Interactive Documentation & Quickstart:** [opencatz.xyz/docs](https://opencatz.xyz/docs)
 - 💻 **Browser Web Terminal TUI Emulator:** [opencatz.xyz/terminal](https://opencatz.xyz/terminal)
-- 🛡️ **9-Lives Risk Engine & Swarm Consensus Visualizer:** [opencatz.xyz/docs/risk-engine](https://opencatz.xyz/docs/risk-engine)
+- 🛡️ **9-Lives Risk Engine & Consensus Visualizer:** [opencatz.xyz/docs/risk-engine](https://opencatz.xyz/docs/risk-engine)
 - 🤖 **LLM Agent Index & Discovery:** [opencatz.xyz/llms.txt](https://opencatz.xyz/llms.txt)
 
 ---
@@ -45,7 +45,7 @@ Opencatz AI separates **24/7 market screening + 3-Layer Swarm Consensus signal g
 
 | Component | Role | What it does |
 | :--- | :--- | :--- |
-| 🐾 **OpenCatz Core** — Intelligence | Screening & Reasoning | **3-Layer Swarm Consensus Engine** (Quant & Liquidity, Catalyst & Sentiment, Security Audit) demanding a **≥ 80% Confidence Score** before a signal is posted. Five specialist screening agents run 24/7: **meme-robinhood** (GMGN smart-money data + GMGN/GoPlus security audits, **24h volume ≥ $25k**, **liquidity ≥ $5k**), **lp-robinhood** (Concentrated Liquidity velocity via **Krystal Cloud**, **TVL ≥ $10k**, **24h volume ≥ $100k**, **24h Fee/TVL ≥ 2%**), **nft** (OpenSea floor & rarity sniping, **floor surge ≥ +10%/1h**, **volume spike ≥ 1.5x**, **sales ≥ 3/h**), **alpha-robinhood** (1-hour Robinhood Chain alpha scraper + optional official **X (Twitter) API v2** social sentiment search), and **whale-eth** (Hyperliquid ETH smart money & institutional perps/spot order flow tracking, **perps ≥ $500k**, **spot ≥ $50k**). A **Position Manager** tracks open positions with Take Profit milestones (**+100% / +200%**), **Stop Loss (-20%)**, **dynamic trailing stops**, LP out-of-range warnings, and NFT floor-drop alerts. |
+| 🐾 **OpenCatz Core** — Intelligence | Screening & Reasoning | **3-Layer Multi-Agent Consensus Engine** (Quant & Liquidity, Catalyst & Sentiment, Security Audit) demanding a **≥ 80% Confidence Score** before a signal is posted. Five specialist screening agents run 24/7: **meme-robinhood** (GMGN smart-money data + GMGN/GoPlus security audits, **24h volume ≥ $25k**, **liquidity ≥ $5k**), **lp-robinhood** (Concentrated Liquidity velocity via **Krystal Cloud**, **TVL ≥ $10k**, **24h volume ≥ $100k**, **24h Fee/TVL ≥ 2%**), **nft** (OpenSea floor & rarity sniping, **floor surge ≥ +10%/1h**, **volume spike ≥ 1.5x**, **sales ≥ 3/h**), **alpha-robinhood** (1-hour Robinhood Chain alpha scraper + optional official **X (Twitter) API v2** social sentiment search), and **whale-eth** (Hyperliquid ETH smart money & institutional perps/spot order flow tracking, **perps ≥ $500k**, **spot ≥ $50k**). A **Position Manager** tracks open positions with Take Profit milestones (**+100% / +200%**), **Stop Loss (-20%)**, **dynamic trailing stops**, LP out-of-range warnings, and NFT floor-drop alerts. |
 | 🎮 **Command Center** — Multi-Platform | Discord · Terminal · Telegram | **1. Discord**: `#opencatz-control-room` natural-language chat, `#audit-on-demand` token auditor, portfolio & risk views, **22 slash commands**, interactive dashboard, and 5 dedicated call channels (`#call-meme-robinhood`, `#call-lp-robinhood`, `#call-nft-robinhood`, `#call-alpha-robinhood`, `#call-whale-eth`).<br>**2. Terminal TUI** (`opencatz terminal` / `npm run terminal`): Full interactive standalone console with live token audits, screening triggers, strategy switcher, treasury & portfolio management without Discord.<br>**3. Telegram Bridge**: Real-time signal alert broadcast cards with quick inline action buttons and interactive callback dashboard. |
 | ⚡ **Cat Den Ops** — Deploy & Maintain | Daemon & Health | **PM2 24/7 daemon** (`opencatz deploy`), self-update engine (`opencatz update` → git pull → install → build → detached PM2 restart) with **Telegram + Discord webhook deployment notifications**, `opencatz doctor` full diagnostics, and interactive **`opencatz onboard`** wizard. |
 
@@ -77,7 +77,7 @@ Opencatz AI separates **24/7 market screening + 3-Layer Swarm Consensus signal g
        └────────────────┴───────────────┼────────────────┴────────────────┘
                                         ▼
                   ┌────────────────────────────────────┐
-                  │   SWARM CONSENSUS ENGINE (≥ 80%)   │
+                  │  MULTI-AGENT CONSENSUS (≥ 80%)     │
                   │  Quant · Catalyst · Security Audit │
                   └────────────────┬───────────────────┘
                                    │ only ≥ 80% confidence
@@ -100,7 +100,7 @@ Opencatz AI separates **24/7 market screening + 3-Layer Swarm Consensus signal g
 
 | # | Feature | Description |
 | :-: | :--- | :--- |
-| 1 | 🛡️ **3-Layer Swarm Consensus** | Quant & Liquidity, Catalyst & Sentiment, Security Audit — **≥ 80% confidence** required before any call card is posted. |
+| 1 | 🛡️ **3-Layer Multi-Agent Consensus** | Quant & Liquidity, Catalyst & Sentiment, Security Audit — **≥ 80% confidence** required before any call card is posted. |
 | 2 | 🌸 **Robinhood Meme Agent** (`#call-meme-robinhood`) | GMGN smart-money/rank/trenches screening + GMGN & GoPlus security audits; hard gate **real 24h volume ≥ $25k**, **liquidity ≥ $5k**, **total fees ≥ $250**, fail-closed. |
 | 3 | 🌊 **Robinhood LP Velocity Engine** (`#call-lp-robinhood`) | Concentrated-liquidity (Uniswap V3) high-yield pools via **Krystal Cloud** (`ethereum@4663`); **TVL ≥ $10k**, **24h volume ≥ $100k**, **24h Fee/TVL ≥ 2%**, **market cap ≥ $100k**, volume velocity, GMGN security re-check. |
 | 4 | 🔮 **NFT Sniper** (`#call-nft-robinhood`) | OpenSea REST v2 floor & rarity sniping; hard filters **floor surge ≥ +10%/1h**, **volume ≥ 1.5x**, **sales ≥ 3/h**; whale sweep & verified badge as card info. |

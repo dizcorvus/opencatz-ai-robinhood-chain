@@ -1,0 +1,42 @@
+# OpenCatz AI (Robinhood Chain Edition)
+
+> OpenCatz AI is an autonomous, open-source Agentic AI crypto intelligence system built exclusively for Robinhood Chain (EVM L2, Chain ID #4663, Native ETH), deploying 5 Specialist AI Scouts governed by a 3-Layer Collaborative Consensus Protocol (≥ 80% Confidence Gate) and the 9-Lives Automated Risk Engine.
+
+## Project Summary
+- Name: OpenCatz AI (Robinhood Chain Edition)
+- Version: 1.0.0
+- License: MIT
+- Runtime: Node.js (>= 22.12), TypeScript
+- Target Network: Robinhood Chain (EVM L2 #4663)
+- Primary DEX Engine: Uniswap V3 (Robinhood Chain)
+- Repository: https://github.com/dizcorvus/opencatz-ai-robinhood-chain
+- Web Portal: https://opencatz.xyz/robinhood-chain
+- Documentation: https://opencatz.xyz/docs
+
+## 5 Specialist AI Scouts (Robinhood Chain)
+1. Robinhood Meme Scout (#call-meme-robinhood):
+   - Scope: Robinhood Chain EVM DEX tokens (GMGN + GoPlus Security)
+2. Robinhood LP Yield Scout (#call-lp-robinhood):
+   - Scope: Concentrated Liquidity velocity via Uniswap V3 & Krystal Cloud
+3. Robinhood NFT Scout (#call-nft-robinhood):
+   - Scope: OpenSea Robinhood Chain NFT floor surges & mint momentum
+4. Alpha & Sentiment Scout (#call-alpha-robinhood):
+   - Scope: Robinhood Chain smart CT alpha & social sentiment signals
+5. Hyperliquid ETH Whale Scout (#call-whale-eth):
+   - Scope: Institutional ETH perps positioning & spot order flow
+
+## Consensus & Risk Safeguards
+- 3-Layer Swarm Consensus: Quant & Liquidity (40%), Catalysts & Sentiment (30%), Security Audit (30%) with >= 80% Confidence Gate.
+- 9-Lives Risk Guard: Stop-Loss (-20%), Tiered Take-Profit (2x / 3x), Dynamic Trailing Stops, Universal Multi-Key Pool.
+
+## Key CLI Commands
+- `opencatz onboard`: Interactive setup wizard (.env & keys)
+- `opencatz terminal`: Standalone Terminal TUI Command Center
+- `opencatz run`: Development mode (tsx watch)
+- `opencatz deploy`: 24/7 background process daemon (PM2)
+- `opencatz test`: Automated Vitest test suite
+- `opencatz doctor`: Health check, API key audit & RPC connectivity
+- `opencatz update`: Automated Git pull, rebuild, and PM2 hot restart
+
+## Discord Slash Commands
+- `/dashboard`, `/menu`, `/wallet`, `/analyze`, `/screening`, `/pump`, `/holders`, `/wallets`, `/price`, `/chart`, `/convert`, `/alert`, `/journal`, `/health`, `/config`, `/strategy`, `/update`, `/cancel`, `/channel`, `/swap`, `/send`

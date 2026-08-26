@@ -67,7 +67,7 @@ function gateSignal(payload: any): boolean {
     confidence: Number(payload.confidenceScore) || undefined,
   });
   if (!res.passed) {
-    console.warn(`[SWARM GATE] ${payload.domain} ${payload.symbol} rejected (confidence ${res.confidenceScore}%) — not posting.`);
+    console.warn(`[CONSENSUS GATE] ${payload.domain} ${payload.symbol} rejected (confidence ${res.confidenceScore}%) — not posting.`);
   }
   return res.passed;
 }

@@ -154,10 +154,10 @@ export class SwarmConsensusEngine {
       },
       reason: passed
         ? strategyReason
-          ? `Signal passed Swarm Consensus (${confidenceScore}% confidence) + Strategi: ${strategyReason}`
+          ? `Signal passed Multi-Agent Consensus (${confidenceScore}% confidence) + Strategy: ${strategyReason}`
           : isFastLane 
-            ? `⚡ **FAST-LANE SWARM BYPASS PASSED** (${confidenceScore}% confidence, Sub-second High Conviction, Reputation Wt: ${reputationMultiplier.toFixed(2)}x).`
-            : `Signal passed Swarm Consensus with ${confidenceScore}% confidence (Reputation Wt: ${reputationMultiplier.toFixed(2)}x).`
+            ? `⚡ **FAST-LANE AGENT CONSENSUS PASSED** (${confidenceScore}% confidence, Sub-second High Conviction, Reputation Wt: ${reputationMultiplier.toFixed(2)}x).`
+            : `Signal passed Multi-Agent Consensus with ${confidenceScore}% confidence (Reputation Wt: ${reputationMultiplier.toFixed(2)}x).`
         : `Signal rejected (${confidenceScore}% confidence below 80% threshold or security failed).`,
     };
 
@@ -184,3 +184,6 @@ export class SwarmConsensusEngine {
     return result;
   }
 }
+
+export const AgentConsensusEngine = SwarmConsensusEngine;
+export const MultiAgentConsensusEngine = SwarmConsensusEngine;

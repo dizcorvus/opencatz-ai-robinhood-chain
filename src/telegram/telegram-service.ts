@@ -162,7 +162,7 @@ ${safeThesis}
 
 ${dexUrl ? `📊 [View Chart on DexScreener](${dexUrl})` : ''}
 
-🤖 _Sent via OpenCatz Swarm Consensus_`;
+🤖 _Sent via OpenCatz Multi-Agent Consensus_`;
 
     const threadId = topicName ? (this.topics.get(topicName.toLowerCase()) || this.topics.get('opencatz-control-room') || this.topics.get('opencat-control-room')) : undefined;
     return this.sendMessage(message, 'Markdown', undefined, threadId);

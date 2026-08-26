@@ -40,7 +40,7 @@ if defined ESC (
 echo.
 echo %LIME%%BOLD%       /\_____/\%NC%
 echo %LIME%%BOLD%      /  %PINK%■%LIME%   %PINK%■%LIME%  \      %LIME%🐾 OPENCATZ AI - SYSTEM SETUP 🐾%NC%
-echo %LIME%%BOLD%     ( ==  %PINK%^^%LIME%  == )     %CYAN%Autonomous Multi-Agent Trading Swarm%NC%
+echo %LIME%%BOLD%     ( ==  %PINK%^^%LIME%  == )     %CYAN%Autonomous Multi-Agent Crypto Intelligence%NC%
 echo %LIME%%BOLD%      )    %YELLOW%~%LIME%    (      %LAVENDER%Robinhood Chain EVM L2 • Chain ID: 4663%NC%
 echo %LIME%%BOLD%     (   _____   )     %GOLD%"Chill trades, 9 lives, sharp alpha."%NC%
 echo %LIME%%BOLD%    ( (  )   (  ) )%NC%
