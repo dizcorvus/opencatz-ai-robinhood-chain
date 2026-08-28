@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import { OpenCatzHub, OpenCatHub } from '../orchestrator/hub.js';
 import { loadApiKeyPool } from '../services/api-key-pool.js';
 
