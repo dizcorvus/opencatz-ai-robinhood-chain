@@ -288,8 +288,8 @@ if (discordToken && clientId) {
     // Real portfolio equity tracker (feeds RiskManager drawdown)
     let prevPortfolioEquityUsd: number | null = null;
 
-    // Start 24/7 Sub-Agents Background Screening Interval Loop (Every 5 minutes)
-    setInterval(async () => {
+    // Start 24/7 Sub-Agents Background Screening Interval Loop (Immediate pass on boot + Every 5 minutes)
+    const runScreeningCycle = async () => {
       console.log('[SUB-AGENTS LOOP] Checking active sub-agent domains...');
       try {
         // Register heartbeats AT THE START of each pass so agents are marked alive while the
@@ -526,7 +526,11 @@ if (discordToken && clientId) {
         console.error('[SUB-AGENTS LOOP ERROR]', err.message);
         notifyControlRoom(client, 'loop-error', `⚠️ **SCREENING LOOP ERROR**\n\`${err.message}\``);
       }
-    }, 5 * 60 * 1000);
+    };
+
+    // Run first screening cycle immediately on startup, then every 5 minutes
+    runScreeningCycle().catch((err: any) => console.error('[SCREENING CYCLE BOOT ERROR]', err.message));
+    setInterval(runScreeningCycle, 5 * 60 * 1000);
   });
 
   client.on('interactionCreate', (interaction) => {
