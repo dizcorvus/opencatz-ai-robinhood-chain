@@ -5,6 +5,7 @@ export interface ApiKeyPool {
   get(): string | undefined;
   markFailed(reason: string): string | undefined;
   reset(): void;
+  getMaskedList(): string[];
 }
 
 const PLACEHOLDER_RE = /YOUR_|placeholder|mock/i;
@@ -41,12 +42,41 @@ export function createApiKeyPool(baseVar: string, keys: string[]): ApiKeyPool {
     },
     reset(): void {
       failed = new Set();
+      index = 0;
+    },
+    getMaskedList(): string[] {
+      return clean.map((k, i) => {
+        const masked = k.length > 8 ? `${k.slice(0, 4)}...${k.slice(-4)}` : `${k.slice(0, 2)}***`;
+        return `#${i + 1}: ${masked}${i === index ? ' (active)' : ''}`;
+      });
     },
   };
 }
 
-export function loadApiKeyPool(baseVar: string): ApiKeyPool {
-  const primary = process.env[baseVar] || '';
-  const backups = process.env[`${baseVar}_BACKUP_KEYS`] || process.env[`${baseVar.replace(/_API_KEY$/, '')}_BACKUP_KEYS`] || '';
-  return createApiKeyPool(baseVar, [primary, ...backups.split(',')]);
+export function loadApiKeyPool(baseVar: string, aliases: string[] = []): ApiKeyPool {
+  const candidates: string[] = [];
+  const primaryKeys = [baseVar, ...aliases];
+
+  for (const varName of primaryKeys) {
+    const val = process.env[varName];
+    if (val) candidates.push(val);
+  }
+
+  // Backup key patterns:
+  // e.g. GMGN_API_KEY -> GMGN_API_KEY_BACKUP_KEYS, GMGN_BACKUP_KEYS
+  const backupPatterns = [
+    `${baseVar}_BACKUP_KEYS`,
+    `${baseVar.replace(/_API_KEY$/, '')}_BACKUP_KEYS`,
+    `${baseVar.replace(/_KEY$/, '')}_BACKUP_KEYS`,
+    `${baseVar.replace(/_TOKEN$/, '')}_BACKUP_KEYS`,
+    ...aliases.map((a) => `${a}_BACKUP_KEYS`),
+    ...aliases.map((a) => `${a.replace(/_API_KEY$/, '')}_BACKUP_KEYS`),
+  ];
+
+  for (const backupVar of backupPatterns) {
+    const val = process.env[backupVar];
+    if (val) candidates.push(val);
+  }
+
+  return createApiKeyPool(baseVar, candidates);
 }

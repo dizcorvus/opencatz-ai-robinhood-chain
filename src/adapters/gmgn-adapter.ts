@@ -168,7 +168,7 @@ export class GMGNAdapter {
   constructor(apiKey?: string) {
     this.keyPool = apiKey
       ? createApiKeyPool('GMGN_API_KEY', [apiKey])
-      : loadApiKeyPool('GMGN_API_KEY');
+      : loadApiKeyPool('GMGN_API_KEY', ['GMGN_API_KEY_ROBINHOOD']);
   }
 
   private async gmgnRequest<T>(
@@ -178,9 +178,10 @@ export class GMGNAdapter {
     body?: unknown,
     retries = 1
   ): Promise<T | null> {
-    const key = this.keyPool.get() || '';
-    if (!key) return null;
+    if (this.keyPool.size === 0) return null;
     const doRequest = async (attemptsLeft: number): Promise<T | null> => {
+      const currentKey = this.keyPool.get() || '';
+      if (!currentKey) return null;
       const timestamp = Math.floor(Date.now() / 1000);
       const client_id = crypto.randomUUID();
       const params = new URLSearchParams();
@@ -197,7 +198,7 @@ export class GMGNAdapter {
       try {
         const res = await fetch(url, {
           method,
-          headers: { 'X-APIKEY': this.keyPool.get() || key, 'Content-Type': 'application/json', 'User-Agent': 'opencatz/1.0' },
+          headers: { 'X-APIKEY': currentKey, 'Content-Type': 'application/json', 'User-Agent': 'opencatz/1.0' },
           body: body !== undefined ? JSON.stringify(body) : undefined,
         });
         if (res.status === 429) {
@@ -220,15 +221,25 @@ export class GMGNAdapter {
             await new Promise((r) => setTimeout(r, waitMs));
             return doRequest(attemptsLeft - 1);
           }
+          // If long ban or banned, rotate to backup key if available!
+          if (this.keyPool.size > 1 && attemptsLeft > 0) {
+            const next = this.keyPool.markFailed(`Rate limit ${banned ? 'banned' : 'exceeded'}`);
+            if (next && next !== currentKey) {
+              console.warn(`[GMGN] Rotated to backup key on 429 — retrying ${subPath} (attempts left: ${attemptsLeft - 1}).`);
+              return doRequest(attemptsLeft - 1);
+            }
+          }
           if (banned) this.keyPool.markFailed('rate limit banned');
           console.warn(`[GMGN] Rate limited${banned ? ' (BANNED)' : ''} — skip ${subPath}, retry on the next pass (~5m).`);
           return null;
         }
-        if (res.status === 401 || res.status === 403) {
-          const next = this.keyPool.markFailed(`HTTP ${res.status} on ${subPath}`);
-          if (next && next !== key && attemptsLeft > 0) {
-            console.warn(`[GMGN] Rotated to backup key — retrying ${subPath} once.`);
-            return doRequest(attemptsLeft - 1);
+        if (res.status === 401 || res.status === 402 || res.status === 403) {
+          if (this.keyPool.size > 1 && attemptsLeft > 0) {
+            const next = this.keyPool.markFailed(`HTTP ${res.status} on ${subPath}`);
+            if (next && next !== currentKey) {
+              console.warn(`[GMGN] Rotated to backup key on HTTP ${res.status} — retrying ${subPath} (attempts left: ${attemptsLeft - 1}).`);
+              return doRequest(attemptsLeft - 1);
+            }
           }
           console.warn(`[GMGN] HTTP ${res.status} for ${subPath}`);
           return null;

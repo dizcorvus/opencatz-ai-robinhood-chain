@@ -77,23 +77,36 @@ export class OpenSeaAdapter {
   }
 
   /**
-   * Fetch with the active pool key; on HTTP 401/403 rotate to a backup key
-   * and retry once. Fail-closed: null when no key or all keys rejected.
+   * Fetch with the active pool key; on HTTP 401/402/403/429 rotate to a backup key
+   * and retry across all available keys. Fail-closed: null when no key or all keys rejected.
    */
   private async fetchWithKey<T>(build: (key: string) => { url: string; init: RequestInit }): Promise<Response | null> {
-    const key = this.keyPool.get() || '';
-    if (!key) return null;
-    const { url, init } = build(key);
-    let res = await fetch(url, init);
-    if ((res.status === 401 || res.status === 403) && this.keyPool.size > 1) {
-      const next = this.keyPool.markFailed(`HTTP ${res.status}`);
-      if (next) {
-        const retry = build(next);
-        res = await fetch(retry.url, retry.init);
-        if (res.status === 401 || res.status === 403) return null;
+    if (this.keyPool.size === 0) return null;
+    const maxAttempts = Math.max(1, this.keyPool.size);
+    let attempts = 0;
+
+    while (attempts < maxAttempts) {
+      const key = this.keyPool.get() || '';
+      if (!key) return null;
+      const { url, init } = build(key);
+      try {
+        const res = await fetch(url, init);
+        if (res.ok) return res;
+
+        if ((res.status === 401 || res.status === 402 || res.status === 403 || res.status === 429) && this.keyPool.size > 1) {
+          const reason = res.status === 429 ? 'HTTP 429 (Rate limit)' : `HTTP ${res.status}`;
+          console.warn(`[OPENSEA] Key failed: ${reason} - rotating to backup key...`);
+          this.keyPool.markFailed(reason);
+          attempts++;
+          continue;
+        }
+        return res;
+      } catch (err: any) {
+        console.warn(`[OPENSEA] Request network error: ${err.message}`);
+        return null;
       }
     }
-    return res;
+    return null;
   }
 
   /**

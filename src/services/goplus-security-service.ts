@@ -58,17 +58,32 @@ export class GoPlusSecurityService {
       }
       return url;
     };
-    try {
-      // GoPlus accepts the API key as `api_key` query param; Authorization header is rejected (code 4012).
-      let res = await fetch(buildUrl(apiKey), { headers: { 'Content-Type': 'application/json' } });
-      if ((res.status === 401 || res.status === 403) && this.keyPool.size > 1) {
-        const next = this.keyPool.markFailed(`HTTP ${res.status}`);
-        if (next) {
-          res = await fetch(buildUrl(next), { headers: { 'Content-Type': 'application/json' } });
-          if (res.status === 401 || res.status === 403) return null;
+    const maxAttempts = Math.max(1, this.keyPool.size);
+    let attempts = 0;
+    let res: Response | null = null;
+
+    while (attempts < maxAttempts) {
+      const currentKey = this.keyPool.get() || '';
+      try {
+        // GoPlus accepts the API key as `api_key` query param; Authorization header is rejected (code 4012).
+        res = await fetch(buildUrl(currentKey), { headers: { 'Content-Type': 'application/json' }, signal: AbortSignal.timeout(10000) });
+        if (res.ok) break;
+
+        if ((res.status === 401 || res.status === 403 || res.status === 429) && this.keyPool.size > 1) {
+          const reason = res.status === 429 ? 'HTTP 429 (Rate limit)' : `HTTP ${res.status}`;
+          console.warn(`[GOPLUS] Key failed: ${reason} - rotating to backup key...`);
+          this.keyPool.markFailed(reason);
+          attempts++;
+          continue;
         }
+        break;
+      } catch (err: any) {
+        console.warn(`[GOPLUS] Network error: ${err.message}`);
+        return null;
       }
-      if (!res.ok) return null;
+    }
+    try {
+      if (!res || !res.ok) return null;
       const data = (await res.json()) as { code?: number; result?: Record<string, any> };
       if (data.code && data.code !== 1) return null;
       const r = data.result?.[contractAddress.toLowerCase()];

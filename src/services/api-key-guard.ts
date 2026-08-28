@@ -8,6 +8,8 @@ export interface DomainKeyRequirement {
   requiredKeys: string[];
 }
 
+import { loadApiKeyPool } from './api-key-pool.js';
+
 export class ApiKeyGuardService {
   private requirements: DomainKeyRequirement[] = AGENT_DOMAINS.map((d) => ({
     domain: d.id,
@@ -29,14 +31,14 @@ export class ApiKeyGuardService {
 
     const missingKeys: string[] = [];
     for (const key of req.requiredKeys) {
-      let val = process.env[key];
+      let aliases: string[] = [];
       if (key === 'AI_API_KEY') {
-        val = val || process.env.AI_API_KEYS || process.env.OPENROUTER_API_KEY || process.env.OPENAI_API_KEY || process.env.ANTHROPIC_API_KEY;
+        aliases = ['AI_API_KEYS', 'OPENROUTER_API_KEY', 'OPENAI_API_KEY', 'ANTHROPIC_API_KEY'];
+      } else if (key === 'GMGN_API_KEY') {
+        aliases = ['GMGN_API_KEY_ROBINHOOD'];
       }
-      if (key === 'GMGN_API_KEY') {
-        val = val || process.env.GMGN_API_KEY_ROBINHOOD;
-      }
-      if (!val || val.trim() === '' || val.includes('YOUR_') || val.includes('placeholder') || val.includes('mock')) {
+      const pool = loadApiKeyPool(key, aliases);
+      if (pool.size === 0) {
         missingKeys.push(key);
       }
     }

@@ -1,4 +1,5 @@
 import { OpenCatzHub, OpenCatHub } from '../orchestrator/hub.js';
+import { loadApiKeyPool } from '../services/api-key-pool.js';
 
 // ANSI Color Tokens from OpenCatz Palette
 const C = {
@@ -29,23 +30,36 @@ ${C.lime}    ( (  )   (  ) )
   console.log(`${C.lime}${C.bold}🩺 OPENCATZ AI AGENT SYSTEM DOCTOR & DIAGNOSTICS AUDIT${C.reset}`);
   console.log(`${C.lime}${C.bold}========================================================================${C.reset}\n`);
 
-  // 1. Check API Keys Configuration
-  console.log('🔑 1. API KEYS CONFIGURATION AUDIT:');
-  const envKeys = [
-    { name: 'AI_API_KEY / AI_API_KEYS', val: process.env.AI_API_KEYS || process.env.AI_API_KEY, required: true },
-    { name: 'KRYSTAL_CLOUD_API_KEY', val: process.env.KRYSTAL_CLOUD_API_KEY, required: false },
-    { name: 'GMGN_API_KEY', val: process.env.GMGN_API_KEY, required: false },
-    { name: 'OPENSEA_API_KEY', val: process.env.OPENSEA_API_KEY, required: false },
-    { name: 'GOPLUS_API_KEY', val: process.env.GOPLUS_API_KEY, required: false },
+  // 1. Check API Keys & Backup Pool Configuration
+  console.log('🔑 1. API KEYS & BACKUP ROTATION POOLS:');
+  const envKeyDefs = [
+    { name: 'AI_API_KEY', aliases: ['AI_API_KEYS', 'OPENROUTER_API_KEY', 'OPENAI_API_KEY', 'ANTHROPIC_API_KEY'], required: true },
+    { name: 'GMGN_API_KEY', aliases: ['GMGN_API_KEY_ROBINHOOD'], required: false },
+    { name: 'KRYSTAL_CLOUD_API_KEY', aliases: [], required: false },
+    { name: 'OPENSEA_API_KEY', aliases: [], required: false },
+    { name: 'GOPLUS_API_KEY', aliases: [], required: false },
+    { name: 'UNISWAP_API_KEY', aliases: [], required: false },
+    { name: 'X_API_BEARER_TOKEN', aliases: [], required: false },
+  ];
+
+  for (const def of envKeyDefs) {
+    const pool = loadApiKeyPool(def.name, def.aliases);
+    const isSet = pool.size > 0;
+    const symbol = isSet ? `🟢 CONFIGURED (${pool.size} key${pool.size > 1 ? 's' : ''})` : def.required ? '🔴 MISSING (REQUIRED)' : '⚪ UNSET (OPTIONAL)';
+    const masked = pool.getMaskedList().join(', ');
+    const hint = isSet ? `[${masked}]` : '';
+    console.log(`   • ${def.name.padEnd(24)}: ${symbol} ${hint}`);
+  }
+
+  // Check Bot credentials
+  const botTokens = [
     { name: 'DISCORD_BOT_TOKEN', val: process.env.DISCORD_BOT_TOKEN, required: false },
     { name: 'TELEGRAM_BOT_TOKEN', val: process.env.TELEGRAM_BOT_TOKEN, required: false },
   ];
-
-  for (const k of envKeys) {
-    const isSet = Boolean(k.val);
-    const symbol = isSet ? '🟢 CONFIGURED' : k.required ? '🔴 MISSING (REQUIRED)' : '⚪ UNSET (OPTIONAL)';
-    const hint = isSet ? `(${k.val!.slice(0, 10)}...)` : '';
-    console.log(`   • ${k.name.padEnd(28)}: ${symbol} ${hint}`);
+  for (const b of botTokens) {
+    const isSet = Boolean(b.val && !b.val.includes('YOUR_') && !b.val.includes('placeholder'));
+    const symbol = isSet ? '🟢 CONFIGURED' : '⚪ UNSET (OPTIONAL)';
+    console.log(`   • ${b.name.padEnd(24)}: ${symbol}`);
   }
 
   // 2. Check RPC Node Connectivity

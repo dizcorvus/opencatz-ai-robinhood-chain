@@ -61,8 +61,7 @@ export class EVMTradeAdapter {
       console.log(`[EVM ADAPTER] DRY_RUN=true -> Fetching REAL Uniswap API quote (no broadcast)...`);
 
       // Fail closed: entry is not usable without a quote API key.
-      const key = this.uniswapKeyPool.get() || '';
-      if (!key) {
+      if (this.uniswapKeyPool.size === 0) {
         console.warn('UNISWAP_API_KEY missing — cannot fetch real quote. Set UNISWAP_API_KEY in .env (dry-run stays simulated).');
         return {
           success: false,
@@ -75,53 +74,64 @@ export class EVMTradeAdapter {
         };
       }
 
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 10_000);
-      try {
-        const quoteBody = {
-          tokenIn: '0x0000000000000000000000000000000000000000', // native ETH
-          tokenOut: request.tokenAddress,
-          amount: BigInt(Math.round(request.amountEth * 1e18)).toString(),
-          type: 'EXACT_INPUT',
-          chainId: this.parseChainId(request.chain),
-          configs: [{ protocols: ['V2','V3','V4'], routingType: 'CLASSIC', enableUniversalRouter: true }],
-        };
-        let quoteRes = await fetch('https://trade-api.gateway.uniswap.org/v1/quote', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json', 'x-api-key': key, 'accept': 'application/json' },
-          body: JSON.stringify(quoteBody),
-          signal: controller.signal,
-        });
-        if ((quoteRes.status === 401 || quoteRes.status === 403) && this.uniswapKeyPool.size > 1) {
-          const next = this.uniswapKeyPool.markFailed(`HTTP ${quoteRes.status}`);
-          if (next) {
-            quoteRes = await fetch('https://trade-api.gateway.uniswap.org/v1/quote', {
-              method: 'POST',
-              headers: { 'content-type': 'application/json', 'x-api-key': next, 'accept': 'application/json' },
-              body: JSON.stringify(quoteBody),
-              signal: controller.signal,
-            });
+      const quoteBody = {
+        tokenIn: '0x0000000000000000000000000000000000000000', // native ETH
+        tokenOut: request.tokenAddress,
+        amount: BigInt(Math.round(request.amountEth * 1e18)).toString(),
+        type: 'EXACT_INPUT',
+        chainId: this.parseChainId(request.chain),
+        configs: [{ protocols: ['V2','V3','V4'], routingType: 'CLASSIC', enableUniversalRouter: true }],
+      };
+
+      const maxAttempts = Math.max(1, this.uniswapKeyPool.size);
+      let attempts = 0;
+      let quoteRes: Response | null = null;
+
+      while (attempts < maxAttempts) {
+        const key = this.uniswapKeyPool.get() || '';
+        if (!key) break;
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 10_000);
+        try {
+          quoteRes = await fetch('https://trade-api.gateway.uniswap.org/v1/quote', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json', 'x-api-key': key, 'accept': 'application/json' },
+            body: JSON.stringify(quoteBody),
+            signal: controller.signal,
+          });
+          clearTimeout(timer);
+
+          if (quoteRes.ok) break;
+
+          if ((quoteRes.status === 401 || quoteRes.status === 403 || quoteRes.status === 429) && this.uniswapKeyPool.size > 1) {
+            const reason = quoteRes.status === 429 ? 'HTTP 429 (Rate limit)' : `HTTP ${quoteRes.status}`;
+            console.warn(`[EVM ADAPTER] Uniswap API key failed: ${reason} - rotating to backup key...`);
+            this.uniswapKeyPool.markFailed(reason);
+            attempts++;
+            continue;
           }
+          break;
+        } catch (err: any) {
+          clearTimeout(timer);
+          console.warn(`[EVM ADAPTER] Uniswap API request network error: ${err.message}`);
+          break;
         }
-        clearTimeout(timer);
-        if (!quoteRes.ok) {
-          return { success: false, chain: String(request.chain), inputEth: request.amountEth, outputTokens: 0, dexUsed: dexName, simulated: true, error: `Uniswap API Quote Failed: ${await quoteRes.text()}` };
-        }
-        const quote = await quoteRes.json() as Record<string, unknown>;
-        return {
-          success: true,
-          txHash: `sim_evm_${request.chain}_${Date.now()}_${Math.random().toString(36).substring(7)}`,
-          chain: String(request.chain),
-          inputEth: request.amountEth,
-          outputTokens: Number(quote.amountOut || 0) / 1e18,
-          dexUsed: 'Uniswap API (Robinhood L2)',
-          simulated: true,
-        };
-      } catch (err: unknown) {
-        clearTimeout(timer);
-        const errMsg = err instanceof Error ? err.message : String(err);
-        return { success: false, chain: String(request.chain), inputEth: request.amountEth, outputTokens: 0, dexUsed: dexName, simulated: true, error: errMsg };
       }
+
+      if (!quoteRes || !quoteRes.ok) {
+        const errText = quoteRes ? await quoteRes.text().catch(() => '') : 'Network error';
+        return { success: false, chain: String(request.chain), inputEth: request.amountEth, outputTokens: 0, dexUsed: dexName, simulated: true, error: `Uniswap API Quote Failed: ${errText}` };
+      }
+      const quote = (await quoteRes.json()) as Record<string, unknown>;
+      return {
+        success: true,
+        txHash: `sim_evm_${request.chain}_${Date.now()}_${Math.random().toString(36).substring(7)}`,
+        chain: String(request.chain),
+        inputEth: request.amountEth,
+        outputTokens: Number(quote.amountOut || 0) / 1e18,
+        dexUsed: 'Uniswap API (Robinhood L2)',
+        simulated: true,
+      };
     }
 
     try {

@@ -51,44 +51,53 @@ export class XApiAdapter {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 10_000);
 
-    try {
-      const endpoint = `https://api.twitter.com/2/tweets/search/recent?query=${encodeURIComponent(query)}&tweet.fields=created_at,public_metrics,author_id&max_results=25`;
+    const endpoint = `https://api.twitter.com/2/tweets/search/recent?query=${encodeURIComponent(query)}&tweet.fields=created_at,public_metrics,author_id&max_results=25`;
+    const maxAttempts = Math.max(1, this.keyPool.size);
+    let attempts = 0;
+    let response: Response | null = null;
 
-      let response = await fetch(endpoint, {
-        headers: {
-          'Authorization': `Bearer ${bearerToken}`,
-          'User-Agent': 'OpenCatzAI-Robinhood/1.0.0',
-        },
-        signal: controller.signal,
-      });
+    while (attempts < maxAttempts) {
+      const currentToken = this.keyPool.get() || bearerToken;
+      try {
+        response = await fetch(endpoint, {
+          headers: {
+            'Authorization': `Bearer ${currentToken}`,
+            'User-Agent': 'OpenCatzAI-Robinhood/1.0.0',
+          },
+          signal: controller.signal,
+        });
 
-      if ((response.status === 401 || response.status === 403 || response.status === 429) && this.keyPool.size > 1) {
-        const nextKey = this.keyPool.markFailed(`HTTP ${response.status}`);
-        if (nextKey) {
-          response = await fetch(endpoint, {
-            headers: {
-              'Authorization': `Bearer ${nextKey}`,
-              'User-Agent': 'OpenCatAI-Robinhood/1.0.0',
-            },
-            signal: controller.signal,
-          });
+        if (response.ok) break;
+
+        if ((response.status === 401 || response.status === 403 || response.status === 429) && this.keyPool.size > 1) {
+          const reason = response.status === 429 ? 'HTTP 429 (Rate limit)' : `HTTP ${response.status}`;
+          console.warn(`[X API] Key failed: ${reason} - rotating to backup key...`);
+          this.keyPool.markFailed(reason);
+          attempts++;
+          continue;
         }
+        break;
+      } catch (err: any) {
+        console.warn(`[X API] Network error: ${err.message}`);
+        break;
       }
+    }
 
-      clearTimeout(timeout);
+    clearTimeout(timeout);
 
-      if (!response.ok) {
-        const errText = await response.text();
-        console.warn(`[X API ADAPTER] Search failed (HTTP ${response.status}): ${errText}`);
-        return {
-          success: false,
-          tweets: [],
-          totalVolume: 0,
-          error: `X API HTTP ${response.status}: ${errText}`,
-        };
-      }
+    if (!response || !response.ok) {
+      const errText = response ? await response.text().catch(() => '') : 'Network error';
+      console.warn(`[X API ADAPTER] Search failed (HTTP ${response?.status ?? 'ERR'}): ${errText}`);
+      return {
+        success: false,
+        tweets: [],
+        totalVolume: 0,
+        error: `X API HTTP ${response?.status ?? 'ERR'}: ${errText}`,
+      };
+    }
 
-      const body = await response.json() as Record<string, unknown>;
+    try {
+      const body = (await response.json()) as Record<string, unknown>;
       const rawData = (body.data as Array<Record<string, unknown>>) || [];
 
       const tweets: XTweetSignal[] = [];

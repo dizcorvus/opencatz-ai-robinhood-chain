@@ -36,11 +36,20 @@ describe('ApiKeyPool', () => {
     expect(pool.get()).toBe('a');
   });
 
-  it('loadApiKeyPool parses env primary + BACKUP_KEYS', () => {
-    process.env.TESTPOOL_API_KEY = 'primary';
+  it('loadApiKeyPool parses env primary + BACKUP_KEYS and aliases', () => {
+    process.env.TESTPOOL_PRIMARY = 'primary';
     process.env.TESTPOOL_BACKUP_KEYS = 'b1, b2 ,YOUR_MOCK';
-    const pool = loadApiKeyPool('TESTPOOL_API_KEY');
+    const pool = loadApiKeyPool('TESTPOOL_API_KEY', ['TESTPOOL_PRIMARY']);
     expect(pool.keys).toEqual(['primary', 'b1', 'b2']);
     expect(pool.baseVar).toBe('TESTPOOL_API_KEY');
+    expect(pool.getMaskedList().length).toBe(3);
+    expect(pool.getMaskedList()[0]).toContain('(active)');
+  });
+
+  it('handles comma-delimited single primary variable', () => {
+    process.env.TESTPOOL_API_KEY = 'key1, key2, key3';
+    const pool = loadApiKeyPool('TESTPOOL_API_KEY');
+    expect(pool.keys).toEqual(['key1', 'key2', 'key3']);
+    expect(pool.size).toBe(3);
   });
 });
