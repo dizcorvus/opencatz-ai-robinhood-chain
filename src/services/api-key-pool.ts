@@ -10,7 +10,10 @@ export interface ApiKeyPool {
 const PLACEHOLDER_RE = /YOUR_|placeholder|mock/i;
 
 export function createApiKeyPool(baseVar: string, keys: string[]): ApiKeyPool {
-  const clean = keys.map((k) => k.trim()).filter((k) => k && !PLACEHOLDER_RE.test(k));
+  const clean = keys
+    .flatMap((k) => (typeof k === 'string' ? k.split(',') : []))
+    .map((k) => k.trim())
+    .filter((k) => k && !PLACEHOLDER_RE.test(k));
   let index = 0;
   let failed = new Set<number>();
 

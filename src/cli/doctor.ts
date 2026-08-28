@@ -33,6 +33,7 @@ ${C.lime}    ( (  )   (  ) )
   console.log('🔑 1. API KEYS CONFIGURATION AUDIT:');
   const envKeys = [
     { name: 'AI_API_KEY / AI_API_KEYS', val: process.env.AI_API_KEYS || process.env.AI_API_KEY, required: true },
+    { name: 'KRYSTAL_CLOUD_API_KEY', val: process.env.KRYSTAL_CLOUD_API_KEY, required: false },
     { name: 'GMGN_API_KEY', val: process.env.GMGN_API_KEY, required: false },
     { name: 'OPENSEA_API_KEY', val: process.env.OPENSEA_API_KEY, required: false },
     { name: 'GOPLUS_API_KEY', val: process.env.GOPLUS_API_KEY, required: false },

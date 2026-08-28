@@ -166,4 +166,42 @@ describe('KrystalCloudAdapter', () => {
     vi.unstubAllGlobals();
     delete process.env.KRYSTAL_CLOUD_BACKUP_KEYS;
   });
+
+  it('rotates to the backup key on HTTP 402 (No credit left) and succeeds', async () => {
+    process.env.KRYSTAL_CLOUD_API_KEY = 'kk1';
+    process.env.KRYSTAL_CLOUD_BACKUP_KEYS = 'kk2';
+    const adapter = new KrystalCloudAdapter();
+    let calls = 0;
+    vi.stubGlobal('fetch', vi.fn(async () => {
+      calls++;
+      if (calls === 1) return new Response(JSON.stringify({ error: 'No credit left' }), { status: 402 });
+      return new Response(JSON.stringify([]), { status: 200 });
+    }));
+    const res = await adapter.fetchTopRobinhoodPools();
+    expect(calls).toBe(2);
+    expect(Array.isArray(res)).toBe(true);
+    const secondInit = vi.mocked(fetch).mock.calls[1][1] as RequestInit;
+    const secondHeaders = (secondInit?.headers ?? {}) as Record<string, string>;
+    expect(secondHeaders['KC-APIKey']).toBe('kk2');
+    vi.unstubAllGlobals();
+    delete process.env.KRYSTAL_CLOUD_BACKUP_KEYS;
+  });
+
+  it('supports comma-separated keys in KRYSTAL_CLOUD_API_KEY directly', async () => {
+    process.env.KRYSTAL_CLOUD_API_KEY = 'kk1,kk2';
+    const adapter = new KrystalCloudAdapter();
+    let calls = 0;
+    vi.stubGlobal('fetch', vi.fn(async () => {
+      calls++;
+      if (calls === 1) return new Response(JSON.stringify({ error: 'No credit left' }), { status: 402 });
+      return new Response(JSON.stringify([]), { status: 200 });
+    }));
+    const res = await adapter.fetchTopRobinhoodPools();
+    expect(calls).toBe(2);
+    expect(Array.isArray(res)).toBe(true);
+    const secondInit = vi.mocked(fetch).mock.calls[1][1] as RequestInit;
+    const secondHeaders = (secondInit?.headers ?? {}) as Record<string, string>;
+    expect(secondHeaders['KC-APIKey']).toBe('kk2');
+    vi.unstubAllGlobals();
+  });
 });
