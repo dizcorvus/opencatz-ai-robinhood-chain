@@ -39,13 +39,12 @@ const C = {
 };
 
 console.log(`
-${C.lime}${C.bold}       /\\_____/\\
-      /  ${C.pink}■${C.lime}   ${C.pink}■${C.lime}  \\      ${C.red}🐾 OPENCATZ AI — CLEAN UNINSTALLER 🐾${C.reset}
-${C.lime}     ( ==  ${C.pink}^${C.lime}  == )     ${C.cyan}Autonomous Multi-Agent System Reset${C.reset}
-${C.lime}      )    ${C.yellow}~${C.lime}    (      ${C.lavender}Robinhood Chain EVM L2 • Chain ID: 4663${C.reset}
-${C.lime}     (   _____   )     ${C.gold}"Chill trades, 9 lives, clean slate."${C.reset}
-${C.lime}    ( (  )   (  ) )
-   (__(__)___(__)__)${C.reset}
+${C.lime}${C.bold}   ▄▀▄    ▄▀▄                                              ${C.reset}
+${C.lime}${C.bold}  █   ▀▀▀▀   █    \x1b[38;2;255;255;255m\x1b[1m▄▄▄▄  ▄▄▄▄▄ ▄   ▄  ▄▄▄▄  ▄▄▄  ▄▄▄▄▄ ▄▄▄▄▄${C.reset}
+${C.lime}${C.bold}  █  ▄▄  ▄▄  █    \x1b[38;2;255;255;255m\x1b[1m█▄▄▄▀ █▄▄▄  █▀▄ █ █     █▄▄▄█   █     ▄▀ ${C.reset}
+${C.lime}${C.bold}▄█    ▀   ▀   █▄  \x1b[38;2;255;255;255m\x1b[1m█     █▄▄▄▄ █  ▀█ ▀▄▄▄▄ █   █   █   ▄█▄▄▄${C.reset}
+
+${C.red}${C.bold}🐾 OPENCATZ AI — CLEAN UNINSTALLER (#4663) 🐾${C.reset}
 `);
 
 function askQuestion(query) {

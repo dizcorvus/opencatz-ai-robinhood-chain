@@ -469,13 +469,13 @@ function drawProgressHeader(step, total, done) {
 
 async function runWizard() {
   console.log(`
-${C.lime}${C.bold}       /\\_____/\\
-      /  ${C.pink}■${C.lime}   ${C.pink}■${C.lime}  \\      ${C.lime}🐾 OPENCATZ AI ONBOARDING WIZARD 🐾${C.reset}
-${C.lime}     ( ==  ${C.pink}^${C.lime}  == )     ${C.cyan}Robinhood Chain Multi-Agent Trading Swarm${C.reset}
-${C.lime}      )    ${C.yellow}~${C.lime}    (      ${C.lavender}EVM L2 #4663 • Native ETH • Uniswap V3${C.reset}
-${C.lime}     (   _____   )     ${C.gold}"Chill trades, 9 lives, sharp alpha."${C.reset}
-${C.lime}    ( (  )   (  ) )
-   (__(__)___(__)__)${C.reset}
+${C.lime}${C.bold}   ▄▀▄    ▄▀▄                                              ${C.reset}
+${C.lime}${C.bold}  █   ▀▀▀▀   █    \x1b[38;2;255;255;255m\x1b[1m▄▄▄▄  ▄▄▄▄▄ ▄   ▄  ▄▄▄▄  ▄▄▄  ▄▄▄▄▄ ▄▄▄▄▄${C.reset}
+${C.lime}${C.bold}  █  ▄▄  ▄▄  █    \x1b[38;2;255;255;255m\x1b[1m█▄▄▄▀ █▄▄▄  █▀▄ █ █     █▄▄▄█   █     ▄▀ ${C.reset}
+${C.lime}${C.bold}▄█    ▀   ▀   █▄  \x1b[38;2;255;255;255m\x1b[1m█     █▄▄▄▄ █  ▀█ ▀▄▄▄▄ █   █   █   ▄█▄▄▄${C.reset}
+
+${C.lime}${C.bold}🐾 OPENCATZ AI ONBOARDING WIZARD 🐾${C.reset}
+${C.cyan}Robinhood Chain Multi-Agent Trading Swarm (EVM L2 #4663)${C.reset}
 `);
   console.log(`${C.lime}========================================================================${C.reset}`);
   console.log(`${C.lime}🐾 OPENCATZ MULTI-AGENT ENGINE - MASTER ONBOARDING WIZARD 🐾${C.reset}`);

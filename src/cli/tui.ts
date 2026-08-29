@@ -40,13 +40,14 @@ function detectPm2(): boolean {
 }
 
 const OPENCATZ_ASCII = `
-${C.lime}${C.bright}       /\\_____/\\
-      /  ${C.pink}■${C.lime}   ${C.pink}■${C.lime}  \\      ${C.lime}🐾 OPENCATZ AI · COMMAND CENTER TUI 🐾${C.reset}
-${C.lime}     ( ==  ${C.pink}^${C.lime}  == )     ${C.cyan}Autonomous Multi-Agent Trading Swarm${C.reset}
-${C.lime}      )    ${C.yellow}~${C.lime}    (      ${C.lavender}Robinhood Chain EVM L2 • Chain ID: 4663 • Native: ETH${C.reset}
-${C.lime}     (   _____   )     ${C.gold}"Chill trades, 9 lives, sharp alpha."${C.reset}
-${C.lime}    ( (  )   (  ) )
-   (__(__)___(__)__)${C.reset}
+${C.lime}${C.bright}   ▄▀▄    ▄▀▄                                              ${C.reset}
+${C.lime}${C.bright}  █   ▀▀▀▀   █    \x1b[38;2;255;255;255m\x1b[1m▄▄▄▄  ▄▄▄▄▄ ▄   ▄  ▄▄▄▄  ▄▄▄  ▄▄▄▄▄ ▄▄▄▄▄${C.reset}
+${C.lime}${C.bright}  █  ▄▄  ▄▄  █    \x1b[38;2;255;255;255m\x1b[1m█▄▄▄▀ █▄▄▄  █▀▄ █ █     █▄▄▄█   █     ▄▀ ${C.reset}
+${C.lime}${C.bright}▄█    ▀   ▀   █▄  \x1b[38;2;255;255;255m\x1b[1m█     █▄▄▄▄ █  ▀█ ▀▄▄▄▄ █   █   █   ▄█▄▄▄${C.reset}
+
+${C.lime}${C.bright}🐾 OPENCATZ AI · COMMAND CENTER TUI (#4663) 🐾${C.reset}
+${C.cyan}Autonomous Multi-Agent Trading Swarm · Robinhood Chain EVM L2${C.reset}
+${C.gold}"Chill trades, 9 lives, razor-sharp on-chain instincts." • opencatz.xyz${C.reset}
 `;
 
 export async function launchTUI(): Promise<void> {

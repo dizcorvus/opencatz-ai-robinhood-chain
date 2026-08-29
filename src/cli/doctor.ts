@@ -21,13 +21,13 @@ const C = {
 
 export async function runOpenCatzDoctor(): Promise<void> {
   console.log(`
-${C.lime}${C.bold}       /\\_____/\\
-      /  ${C.pink}■${C.lime}   ${C.pink}■${C.lime}  \\      ${C.green}🐾 OPENCATZ AI — SYSTEM DOCTOR 🐾${C.reset}
-${C.lime}     ( ==  ${C.pink}^${C.lime}  == )     ${C.cyan}Autonomous Multi-Agent Health Audit${C.reset}
-${C.lime}      )    ${C.yellow}~${C.lime}    (      ${C.lavender}Robinhood Chain EVM L2 • Chain ID: 4663${C.reset}
-${C.lime}     (   _____   )     ${C.gold}"Chill trades, 9 lives, sharp alpha."${C.reset}
-${C.lime}    ( (  )   (  ) )
-   (__(__)___(__)__)${C.reset}
+${C.lime}${C.bold}   ▄▀▄    ▄▀▄                                              ${C.reset}
+${C.lime}${C.bold}  █   ▀▀▀▀   █    \x1b[38;2;255;255;255m\x1b[1m▄▄▄▄  ▄▄▄▄▄ ▄   ▄  ▄▄▄▄  ▄▄▄  ▄▄▄▄▄ ▄▄▄▄▄${C.reset}
+${C.lime}${C.bold}  █  ▄▄  ▄▄  █    \x1b[38;2;255;255;255m\x1b[1m█▄▄▄▀ █▄▄▄  █▀▄ █ █     █▄▄▄█   █     ▄▀ ${C.reset}
+${C.lime}${C.bold}▄█    ▀   ▀   █▄  \x1b[38;2;255;255;255m\x1b[1m█     █▄▄▄▄ █  ▀█ ▀▄▄▄▄ █   █   █   ▄█▄▄▄${C.reset}
+
+${C.green}${C.bold}🐾 OPENCATZ AI — SYSTEM DOCTOR (#4663) 🐾${C.reset}
+${C.cyan}Autonomous Multi-Agent Health Audit & Diagnostics${C.reset}
 `);
   console.log(`${C.lime}${C.bold}========================================================================${C.reset}`);
   console.log(`${C.lime}${C.bold}🩺 OPENCATZ AI AGENT SYSTEM DOCTOR & DIAGNOSTICS AUDIT${C.reset}`);

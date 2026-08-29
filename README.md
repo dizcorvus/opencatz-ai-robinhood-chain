@@ -8,13 +8,13 @@
 
 <p align="center">
   <pre>
-      /\_____/\       🐾 OPENCATZ AI (ROBINHOOD CHAIN EDITION) 🐾
-     /  ■   ■  \      ════════════════════════════════════════════════════════════════════════
-    ( ==  ^  == )     Autonomous Multi-Agent Crypto Intelligence & On-Chain Trading
-     )    ~    (      Built Exclusively for Robinhood Chain EVM L2 (#4663, Native ETH)
-    (   _____   )     "Chill trades, 9 lives, razor-sharp on-chain instincts." • opencatz.xyz
-   ( (  )   (  ) )    ════════════════════════════════════════════════════════════════════════
-  (__(__)___(__)__)   ● 24/7 Agentic AI Active · 🏹 5 Specialist Scouts Stalking #4663
+   ▄▀▄    ▄▀▄                                              
+  █   ▀▀▀▀   █    ▄▄▄▄  ▄▄▄▄▄ ▄   ▄  ▄▄▄▄  ▄▄▄  ▄▄▄▄▄ ▄▄▄▄▄
+  █  ▄▄  ▄▄  █    █▄▄▄▀ █▄▄▄  █▀▄ █ █     █▄▄▄█   █     ▄▀ 
+▄█    ▀   ▀   █▄  █     █▄▄▄▄ █  ▀█ ▀▄▄▄▄ █   █   █   ▄█▄▄▄
+
+🐾 OPENCATZ AI (ROBINHOOD CHAIN EDITION) · EVM L2 (#4663) · NATIVE ETH DEX ENGINE
+Autonomous Multi-Agent Crypto Intelligence & On-Chain Trading Engine
   </pre>
 </p>
 

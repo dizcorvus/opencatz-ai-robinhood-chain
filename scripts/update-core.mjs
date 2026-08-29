@@ -58,13 +58,12 @@ export async function runOpenCatzUpdate({ noRestart = false, cwd = REPO_ROOT } =
   };
 
   console.log(`
-${C.lime}${C.bold}       /\\_____/\\
-      /  ${C.pink}■${C.lime}   ${C.pink}■${C.lime}  \\      ${C.cyan}🐾 OPENCATZ AI — SELF-UPDATE 🐾${C.reset}
-${C.lime}     ( ==  ${C.pink}^${C.lime}  == )     ${C.lime}Robinhood Chain Multi-Agent System${C.reset}
-${C.lime}      )    ${C.yellow}~${C.lime}    (      ${C.lavender}EVM L2 #4663 • Native: ETH${C.reset}
-${C.lime}     (   _____   )     ${C.gold}"Chill trades, 9 lives, sharp alpha."${C.reset}
-${C.lime}    ( (  )   (  ) )
-   (__(__)___(__)__)${C.reset}
+${C.lime}${C.bold}   ▄▀▄    ▄▀▄                                              ${C.reset}
+${C.lime}${C.bold}  █   ▀▀▀▀   █    \x1b[38;2;255;255;255m\x1b[1m▄▄▄▄  ▄▄▄▄▄ ▄   ▄  ▄▄▄▄  ▄▄▄  ▄▄▄▄▄ ▄▄▄▄▄${C.reset}
+${C.lime}${C.bold}  █  ▄▄  ▄▄  █    \x1b[38;2;255;255;255m\x1b[1m█▄▄▄▀ █▄▄▄  █▀▄ █ █     █▄▄▄█   █     ▄▀ ${C.reset}
+${C.lime}${C.bold}▄█    ▀   ▀   █▄  \x1b[38;2;255;255;255m\x1b[1m█     █▄▄▄▄ █  ▀█ ▀▄▄▄▄ █   █   █   ▄█▄▄▄${C.reset}
+
+${C.cyan}🐾 OPENCATZ AI — SELF-UPDATE (#4663) 🐾${C.reset}
 `);
   console.log(`   ${C.bold}Repo:${C.reset} ${cwd} | ${C.bold}Node:${C.reset} ${process.version}`);
   console.log(`   ${C.bold}Mode:${C.reset} ${noRestart ? 'without restart (--no-restart)' : 'with PM2 restart'}`);
