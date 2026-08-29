@@ -1,13 +1,6 @@
 <p align="center">
   <a href="https://opencatz.xyz/robinhood-chain" target="_blank" rel="noopener noreferrer">
-    <img src="banner.png" alt="OpenCatz AI Robinhood Chain" width="100%" />
-  </a>
-</p>
-
-# OpenCatz 🐾 — Robinhood Chain Autonomous Crypto Intelligence
-
-<p align="center">
-  <pre>
+    <pre>
    ▄▀▄    ▄▀▄                                              
   █   ▀▀▀▀   █    ▄▄▄▄  ▄▄▄▄▄ ▄   ▄  ▄▄▄▄  ▄▄▄  ▄▄▄▄▄ ▄▄▄▄▄
   █  ▄▄  ▄▄  █    █▄▄▄▀ █▄▄▄  █▀▄ █ █     █▄▄▄█   █     ▄▀ 
@@ -15,8 +8,11 @@
 
 🐾 OPENCATZ AI (ROBINHOOD CHAIN EDITION) · EVM L2 (#4663) · NATIVE ETH DEX ENGINE
 Autonomous Multi-Agent Crypto Intelligence & On-Chain Trading Engine
-  </pre>
+    </pre>
+  </a>
 </p>
+
+# OpenCatz 🐾 — Robinhood Chain Autonomous Crypto Intelligence
 
 <p align="center">
   <a href="https://opencatz.xyz/robinhood-chain"><img src="https://img.shields.io/badge/Portal-opencatz.xyz%2Frobinhood--chain-brightgreen.svg?style=flat-square" alt="Portal"></a>
