@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://opencatz.xyz/robinhood-chain" target="_blank" rel="noopener noreferrer">
+    <img src="banner.png" alt="OpenCatz AI Robinhood Chain" width="100%" />
+  </a>
+</p>
+
 # OpenCatz 🐾 — Robinhood Chain Autonomous Crypto Intelligence
 
 <p align="center">
