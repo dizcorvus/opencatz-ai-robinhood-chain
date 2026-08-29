@@ -63,9 +63,7 @@ export class RobinhoodScreeningAgent implements ScreeningAgent<RobinhoodSignal> 
   private dedupeTokens = createDedupe();
 
   constructor(config?: Partial<RobinhoodScreeningConfig>, strategyParams?: () => Record<string, unknown>) {
-    // Separate GMGN key for robinhood (per-key rate limit): fallback to
-    // GMGN_API_KEY when GMGN_API_KEY_ROBINHOOD is not yet set.
-    this.gmgn = new GMGNAdapter(process.env.GMGN_API_KEY_ROBINHOOD || process.env.GMGN_API_KEY);
+    this.gmgn = new GMGNAdapter();
     this.strategyEngine = new StrategyEngine();
     this.config = { ...DEFAULT_CONFIG, ...config };
     this.strategyParams = strategyParams;

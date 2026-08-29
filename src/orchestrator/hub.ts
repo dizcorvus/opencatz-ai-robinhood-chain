@@ -251,7 +251,7 @@ export class OpenCatzHub {
       await krystalAdapter.fetchTopRobinhoodPools(minTvlUsd, minVol24hUsd),
       { minTvlUsd, minFeeTvlRatio24h }
     );
-    const gmgn = this.gmgnAdapter ?? new GMGNAdapter(process.env.GMGN_API_KEY_ROBINHOOD || process.env.GMGN_API_KEY);
+    const gmgn = this.gmgnAdapter ?? new GMGNAdapter();
     const isBaseAsset = (sym: string) => /^(WETH|ETH|USDC|USDT|DAI|WBTC|WSTETH|STETH)$/i.test(sym);
     const enriched = new Map<string, any>(); // tokenAddress -> GMGN info
     const results: AgentReport[] = [];

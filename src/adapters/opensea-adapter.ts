@@ -70,9 +70,10 @@ export class OpenSeaAdapter {
   public readonly supportedChains = ['robinhood'] as const;
 
   constructor(apiKey?: string) {
+    const envPool = loadApiKeyPool('OPENSEA_API_KEY');
     this.keyPool = apiKey
-      ? createApiKeyPool('OPENSEA_API_KEY', [apiKey])
-      : loadApiKeyPool('OPENSEA_API_KEY');
+      ? createApiKeyPool('OPENSEA_API_KEY', [apiKey, ...envPool.keys])
+      : envPool;
     this.isDryRun = isDryRunMode();
   }
 

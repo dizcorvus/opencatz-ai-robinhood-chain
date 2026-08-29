@@ -166,9 +166,10 @@ export class GMGNAdapter {
   }
 
   constructor(apiKey?: string) {
+    const envPool = loadApiKeyPool('GMGN_API_KEY', ['GMGN_API_KEY_ROBINHOOD']);
     this.keyPool = apiKey
-      ? createApiKeyPool('GMGN_API_KEY', [apiKey])
-      : loadApiKeyPool('GMGN_API_KEY', ['GMGN_API_KEY_ROBINHOOD']);
+      ? createApiKeyPool('GMGN_API_KEY', [apiKey, ...envPool.keys])
+      : envPool;
   }
 
   private async gmgnRequest<T>(
@@ -202,10 +203,16 @@ export class GMGNAdapter {
           body: body !== undefined ? JSON.stringify(body) : undefined,
         });
         if (res.status === 429) {
-          // Polite retry (GMGN docs): read the reset time, wait until reset + buffer,
-          // then retry AT MOST once. Do not spam: each retry during cooldown
-          // extends the ban by 5 seconds (up to 5 minutes). Long bans (>30s) are skipped —
-          // the next scan (5 minutes later) retries.
+          // If we have backup keys available in the pool, rotate immediately without waiting!
+          if (this.keyPool.size > 1 && attemptsLeft > 0) {
+            const next = this.keyPool.markFailed(`Rate limit 429 on ${subPath}`);
+            if (next && next !== currentKey) {
+              console.warn(`[GMGN] ⚡ Rotated immediately to backup key on 429 — retrying ${subPath} (attempts left: ${attemptsLeft - 1}).`);
+              return doRequest(attemptsLeft - 1);
+            }
+          }
+
+          // Polite wait only if single key without backups
           let resetSec = Number(res.headers.get('X-RateLimit-Reset') || 0);
           let banned = false;
           if (!resetSec) {
@@ -213,21 +220,13 @@ export class GMGNAdapter {
               const errBody: any = await res.json();
               resetSec = Number(errBody?.reset_at || 0);
               banned = errBody?.error === 'RATE_LIMIT_BANNED';
-            } catch { /* body not JSON — use headers only */ }
+            } catch { /* body not JSON */ }
           }
           const waitMs = resetSec > 0 ? Math.max(resetSec * 1000 - Date.now(), 0) + 1000 : 5000;
           if (!banned && attemptsLeft > 0 && waitMs <= 30_000) {
             console.warn(`[GMGN] Rate limited. Waiting ${Math.floor(waitMs / 1000)}s, then retrying once (attempts left: ${attemptsLeft}).`);
             await new Promise((r) => setTimeout(r, waitMs));
             return doRequest(attemptsLeft - 1);
-          }
-          // If long ban or banned, rotate to backup key if available!
-          if (this.keyPool.size > 1 && attemptsLeft > 0) {
-            const next = this.keyPool.markFailed(`Rate limit ${banned ? 'banned' : 'exceeded'}`);
-            if (next && next !== currentKey) {
-              console.warn(`[GMGN] Rotated to backup key on 429 — retrying ${subPath} (attempts left: ${attemptsLeft - 1}).`);
-              return doRequest(attemptsLeft - 1);
-            }
           }
           if (banned) this.keyPool.markFailed('rate limit banned');
           console.warn(`[GMGN] Rate limited${banned ? ' (BANNED)' : ''} — skip ${subPath}, retry on the next pass (~5m).`);

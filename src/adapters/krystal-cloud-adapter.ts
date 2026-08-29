@@ -62,9 +62,10 @@ export class KrystalCloudAdapter {
   private keyPool: ApiKeyPool;
 
   constructor(apiKey?: string) {
+    const envPool = loadApiKeyPool('KRYSTAL_CLOUD_API_KEY');
     this.keyPool = apiKey
-      ? createApiKeyPool('KRYSTAL_CLOUD_API_KEY', [apiKey])
-      : loadApiKeyPool('KRYSTAL_CLOUD_API_KEY');
+      ? createApiKeyPool('KRYSTAL_CLOUD_API_KEY', [apiKey, ...envPool.keys])
+      : envPool;
   }
 
   public isConfigured(): boolean {

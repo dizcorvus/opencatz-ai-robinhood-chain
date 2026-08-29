@@ -62,20 +62,38 @@ export function loadApiKeyPool(baseVar: string, aliases: string[] = []): ApiKeyP
     if (val) candidates.push(val);
   }
 
-  // Backup key patterns:
-  // e.g. GMGN_API_KEY -> GMGN_API_KEY_BACKUP_KEYS, GMGN_BACKUP_KEYS
-  const backupPatterns = [
-    `${baseVar}_BACKUP_KEYS`,
-    `${baseVar.replace(/_API_KEY$/, '')}_BACKUP_KEYS`,
-    `${baseVar.replace(/_KEY$/, '')}_BACKUP_KEYS`,
-    `${baseVar.replace(/_TOKEN$/, '')}_BACKUP_KEYS`,
-    ...aliases.map((a) => `${a}_BACKUP_KEYS`),
-    ...aliases.map((a) => `${a.replace(/_API_KEY$/, '')}_BACKUP_KEYS`),
+  // Comprehensive backup key patterns:
+  // e.g. GMGN_API_KEY -> GMGN_API_KEY_BACKUP_KEYS, GMGN_BACKUP_KEYS, GMGN_API_KEY_BACKUP, GMGN_BACKUP, GMGN_KEY_1..10
+  const prefixes = [
+    baseVar,
+    baseVar.replace(/_API_KEY$/, ''),
+    baseVar.replace(/_KEY$/, ''),
+    baseVar.replace(/_TOKEN$/, ''),
+    ...aliases,
+    ...aliases.map((a) => a.replace(/_API_KEY$/, '')),
   ];
 
-  for (const backupVar of backupPatterns) {
-    const val = process.env[backupVar];
-    if (val) candidates.push(val);
+  const backupSuffixes = [
+    '_BACKUP_KEYS',
+    '_BACKUP_KEY',
+    '_BACKUPS',
+    '_BACKUP',
+    '_KEYS',
+  ];
+
+  for (const prefix of prefixes) {
+    for (const suffix of backupSuffixes) {
+      const varName = `${prefix}${suffix}`;
+      if (!primaryKeys.includes(varName)) {
+        const val = process.env[varName];
+        if (val) candidates.push(val);
+      }
+    }
+    // Also check indexed slots: e.g. GMGN_KEY_1, GMGN_KEY_2, etc.
+    for (let i = 1; i <= 10; i++) {
+      const indexed = process.env[`${prefix}_${i}`] || process.env[`${prefix}_KEY_${i}`];
+      if (indexed) candidates.push(indexed);
+    }
   }
 
   return createApiKeyPool(baseVar, candidates);
