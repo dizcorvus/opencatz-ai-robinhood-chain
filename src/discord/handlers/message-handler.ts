@@ -337,7 +337,13 @@ ${activeAgentsLine}
 
     const chunks = splitDiscordMessage(response);
     // First chunk as reply (preserves thread context), rest as follow-ups
-    await message.reply(chunks[0]);
+    try {
+      await message.reply({ content: chunks[0], failIfNotExists: false });
+    } catch {
+      if ('send' in message.channel && typeof message.channel.send === 'function') {
+        await message.channel.send(chunks[0]);
+      }
+    }
     for (let i = 1; i < chunks.length; i++) {
       if ('send' in message.channel && typeof message.channel.send === 'function') {
         await message.channel.send(chunks[i]);
@@ -354,15 +360,21 @@ ${activeAgentsLine}
 
     // 1. Dynamic intent: User asking about LLM / AI model
     if (lower.includes('llm') || lower.includes('model') || lower.includes('ai apa') || lower.includes('pakai ai')) {
-      await message.reply(
+      const replyMsg =
         `🐾 **OPENCATZ LLM ENGINE STATUS REPORT**\n\n` +
         `• **Configured Provider:** \`${providerConfig.provider.toUpperCase()}\` (${providerConfig.baseUrl})\n` +
         `• **Target Model:** \`${providerConfig.modelName}\`\n` +
         `• **Active API Key Hint:** \`${keyHint}\`\n` +
         `• **Error Detail:** ⚠️ \`${error.message || 'Unknown Error'}\`\n\n` +
         `💡 **Fix:** Run \`opencatz wizard\` on the VPS to refresh your API keys.\n\n` +
-        `🛡️ **Local Autonomous System:** 95% of OpenCatz's local engine (5 Specialist Agents, GoPlus/GMGN audits, Multi-Agent Consensus, \`/swap\`, \`/alert\`) keeps operating 100% smoothly!`
-      );
+        `🛡️ **Local Autonomous System:** 95% of OpenCatz's local engine (5 Specialist Agents, GoPlus/GMGN audits, Multi-Agent Consensus, \`/swap\`, \`/alert\`) keeps operating 100% smoothly!`;
+      try {
+        await message.reply({ content: replyMsg, failIfNotExists: false });
+      } catch {
+        if ('send' in message.channel && typeof message.channel.send === 'function') {
+          await message.channel.send(replyMsg);
+        }
+      }
       return;
     }
 
@@ -379,6 +391,12 @@ ${activeAgentsLine}
       `3. Direct on-chain execution: \`/swap\` or \`/send\`.\n\n` +
       `*(Note: Cloud AI Error. Run \`opencatz wizard\` on the VPS to update API keys!)*`;
 
-    await message.reply(fallbackText);
+    try {
+      await message.reply({ content: fallbackText, failIfNotExists: false });
+    } catch {
+      if ('send' in message.channel && typeof message.channel.send === 'function') {
+        await message.channel.send(fallbackText);
+      }
+    }
   }
 }

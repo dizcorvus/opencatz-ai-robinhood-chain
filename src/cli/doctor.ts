@@ -88,7 +88,10 @@ ${C.cyan}Autonomous Multi-Agent Health Audit & Diagnostics${C.reset}
 
   // 3. Sub-Agent Statuses
   console.log('\n🐾 3. SUB-AGENT 24/7 SCREENING STATUSES:');
+  const { StateStore } = await import('../services/state-store.js');
+  const stateStore = new StateStore();
   const hub = new OpenCatzHub();
+  hub.attachStateStore(stateStore);
   const statuses = hub.getAgentStatuses();
   for (const [name, state] of Object.entries(statuses)) {
     console.log(`   • ${name.toUpperCase().padEnd(20)}: ${state.active ? '🟢 ACTIVE (24/7 Background Running)' : '🔴 PAUSED'}`);
