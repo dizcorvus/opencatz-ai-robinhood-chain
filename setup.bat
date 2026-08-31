@@ -51,14 +51,14 @@ rem --- [1/6] Runtime check ---
 echo %CYAN%%BOLD%▶ [1/6] Runtime Environment Check...%NC%
 node --version >nul 2>&1
 if errorlevel 1 (
-  echo  %YELLOW%⚠ Warning: Node.js not found. Install Node ^>= 22.12 from https://nodejs.org and re-run setup.%NC%
+  echo  %YELLOW%⚠ Warning: Node.js not found. Install Node ^>= 20.0 from https://nodejs.org and re-run setup.%NC%
 ) else (
-  node --version | findstr /R /C:"v2[2-9]" /C:"v[3-9][0-9]" >nul
+  node --version | findstr /R /C:"v2[0-9]" /C:"v[3-9][0-9]" >nul
   if errorlevel 1 (
     for /f "delims=" %%v in ('node --version') do set "NODE_VER=%%v"
-    echo  %YELLOW%⚠ Warning: found Node !NODE_VER! - OpenCatz requires ^>= 22.12.%NC%
+    echo  %YELLOW%⚠ Warning: found Node !NODE_VER! - OpenCatz requires ^>= 20.0.%NC%
   ) else (
-    echo  %GREEN%✓%NC% Node found ^>= v22
+    echo  %GREEN%✓%NC% Node found ^>= v20
   )
 )
 call npm --version >nul 2>&1

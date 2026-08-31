@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import path from 'path';
 import { isDryRun as isDryRunMode, getExecutionMode, isAutoExecute, isSignalOnly } from './config/config.js';
-import { Client, GatewayIntentBits, REST, Routes, ChannelType } from 'discord.js';
+import { Client, GatewayIntentBits, REST, Routes, ChannelType, Events } from 'discord.js';
 import { buildCallEmbed } from './discord/embeds/call-embed.js';
 import { OpenCatzHub } from './orchestrator/hub.js';
 import { dispatchDomain } from './orchestrator/dispatch.js';
@@ -187,7 +187,7 @@ if (discordToken && clientId) {
     },
   });
 
-  client.once('ready', async () => {
+  client.once(Events.ClientReady, async () => {
     console.log(`[DISCORD BOT] Logged in as ${client.user?.tag}!`);
 
     // Post-update report: if a self-update just ran (fire-and-forget killed the

@@ -33,7 +33,7 @@ printf "%b\n" "${LIME}${BOLD}   (__(__)___(__)__)${NC}"
 printf "\n"
 
 step 1 "Runtime Environment Check"
-node --version | grep -qE '^v(2[2-9]|[3-9][0-9])' || fail "Node >= 22.12 required (found: $(node --version)). Install via https://nodejs.org"
+node --version | grep -qE '^v(2[0-9]|[3-9][0-9])' || fail "Node >= 20.0.0 required (found: $(node --version)). Install via https://nodejs.org"
 command -v npm >/dev/null || fail "npm not found"
 ok "Node $(node --version) + npm $(npm --version)"
 

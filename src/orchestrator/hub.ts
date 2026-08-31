@@ -74,7 +74,8 @@ export class OpenCatzHub {
     const domains = AGENT_DOMAINS.map((d) => d.id);
     for (const d of domains) {
       const savedState = savedStates[d];
-      const isActive = savedState !== undefined ? Boolean(savedState) : false;
+      // Out-of-the-box: default to true (ACTIVE) on fresh setup; preserve explicit pause (false)
+      const isActive = savedState !== undefined ? Boolean(savedState) : true;
       this.agentStates.set(d, isActive);
     }
     console.log(`[HUB] Sub-Agent persistent states synchronized. Active domains: [${this.getActiveDomains().join(', ') || 'NONE (ALL PAUSED)'}]`);
@@ -83,7 +84,7 @@ export class OpenCatzHub {
   private initializeAgentStatesDefaultPaused(): void {
     const domains = AGENT_DOMAINS.map((d) => d.id);
     for (const d of domains) {
-      this.agentStates.set(d, false);
+      this.agentStates.set(d, true);
       this.autoExecuteStates.set(d, { enabled: false, maxTradeAmount: 0.1 });
     }
   }

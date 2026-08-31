@@ -55,7 +55,7 @@
   "author": "dizcorvus",
   "license": "MIT",
   "engines": {
-    "node": ">=22.12"
+    "node": ">=20.0.0"
   },
   "dependencies": {
     "discord.js": "^14.18.0",

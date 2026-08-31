@@ -30,6 +30,22 @@ export function splitDiscordMessage(text: string, maxLen = 1950): string[] {
   return chunks;
 }
 
+async function safeReply(
+  message: Message,
+  content: string | { content?: string; embeds?: any[]; components?: any[] }
+): Promise<void> {
+  const options = typeof content === 'string'
+    ? { content, failIfNotExists: false }
+    : { ...content, failIfNotExists: false };
+  try {
+    await message.reply(options);
+  } catch {
+    if ('send' in message.channel && typeof message.channel.send === 'function') {
+      await message.channel.send(options);
+    }
+  }
+}
+
 export async function handleControlRoomMessage(
   message: Message,
   hub: OpenCatHub,
@@ -58,7 +74,7 @@ export async function handleControlRoomMessage(
       const agentDomains = ['meme-robinhood', 'lp-robinhood', 'nft', 'all'];
       const foundDomain = agentDomains.find(d => lowerQuery.includes(d)) || 'all';
       const result = await toolRegistry.executeToolCall('pause_sub_agent', { agentId: foundDomain });
-      await message.reply(`🔴 **OPENCATZ CONTROL CENTER**: ${result.message}\n\nSub-agent status updated in Hub Orchestrator state.`);
+      await safeReply(message, `🔴 **OPENCATZ CONTROL CENTER**: ${result.message}\n\nSub-agent status updated in Hub Orchestrator state.`);
       return;
     }
   }
@@ -69,7 +85,7 @@ export async function handleControlRoomMessage(
       const agentDomains = ['meme-robinhood', 'lp-robinhood', 'nft', 'all'];
       const foundDomain = agentDomains.find(d => lowerQuery.includes(d)) || 'all';
       const result = await toolRegistry.executeToolCall('resume_sub_agent', { agentId: foundDomain });
-      await message.reply(`🟢 **OPENCATZ CONTROL CENTER**: ${result.message}\n\nSub-agent status updated in Hub Orchestrator state.`);
+      await safeReply(message, `🟢 **OPENCATZ CONTROL CENTER**: ${result.message}\n\nSub-agent status updated in Hub Orchestrator state.`);
       return;
     }
   }
@@ -78,9 +94,9 @@ export async function handleControlRoomMessage(
   if (lowerQuery.includes('run screening') || lowerQuery.includes('trigger screening') || lowerQuery.includes('start screening')) {
     const agentDomains = ['meme-robinhood', 'lp-robinhood', 'nft'];
     const foundDomain = agentDomains.find(d => lowerQuery.includes(d)) || 'meme-robinhood';
-    await message.reply(`⚡ **OPENCATZ ON-DEMAND SCREENING TRIGGERED** for \`${foundDomain.toUpperCase()}\`...\nScreening pass in progress.`);
+    await safeReply(message, `⚡ **OPENCATZ ON-DEMAND SCREENING TRIGGERED** for \`${foundDomain.toUpperCase()}\`...\nScreening pass in progress.`);
     const result = await toolRegistry.executeToolCall('trigger_screening_pass', { agentId: foundDomain });
-    await message.reply(`✅ **SCREENING COMPLETE** for \`${foundDomain.toUpperCase()}\`: Found **${result.data?.length || 0}** signals passing 3-Layer Multi-Agent Filter.`);
+    await safeReply(message, `✅ **SCREENING COMPLETE** for \`${foundDomain.toUpperCase()}\`: Found **${result.data?.length || 0}** signals passing 3-Layer Multi-Agent Filter.`);
     return;
   }
 
@@ -90,7 +106,7 @@ export async function handleControlRoomMessage(
     if (numbers && numbers.length > 0) {
       const val = parseFloat(numbers[0]);
       const result = await toolRegistry.executeToolCall('set_risk_limit', { maxDrawdownPct: val });
-      await message.reply(`🛡️ **OPENCATZ RISK MANAGER UPDATED**: ${result.message}`);
+      await safeReply(message, `🛡️ **OPENCATZ RISK MANAGER UPDATED**: ${result.message}`);
       return;
     }
   }
@@ -103,7 +119,7 @@ export async function handleControlRoomMessage(
     for (const [name, state] of Object.entries(statuses) as [string, any][]) {
       statusText += `• **${name.toUpperCase()}**: ${state.active ? '🟢 ACTIVE (24/7 Running)' : '🔴 PAUSED'}\n`;
     }
-    await message.reply(statusText);
+    await safeReply(message, statusText);
     return;
   }
 
@@ -117,7 +133,7 @@ export async function handleControlRoomMessage(
         action: 'screening',
         agentId: foundDomain,
       });
-      await message.reply(`⏰ **OPENCATZ CRON SCHEDULER**: ${result.message}\nAutomated task scheduled and saved to database.`);
+      await safeReply(message, `⏰ **OPENCATZ CRON SCHEDULER**: ${result.message}\nAutomated task scheduled and saved to database.`);
       return;
     }
   }
@@ -129,7 +145,7 @@ export async function handleControlRoomMessage(
     const records = memory.getRecentAudits(5);
 
     if (records.length === 0) {
-      await message.reply(`🧠 **OPENCATZ SESSION MEMORY**: No token audit history is stored in persistent memory yet.`);
+      await safeReply(message, `🧠 **OPENCATZ SESSION MEMORY**: No token audit history is stored in persistent memory yet.`);
       return;
     }
 
@@ -137,7 +153,7 @@ export async function handleControlRoomMessage(
     for (const r of records) {
       memoryText += `• **${r.symbol}** (\`${r.contractAddress.substring(0, 8)}...\` | ${r.chain.toUpperCase()}): ${r.verdict} (Score: ${r.score})\n  *Date:* ${r.timestampIso.slice(0, 16)}\n`;
     }
-    await message.reply(memoryText);
+    await safeReply(message, memoryText);
     return;
   }
 
@@ -157,10 +173,10 @@ export async function handleControlRoomMessage(
           modelName: modelName || '',
           baseUrl: baseUrl || '',
         });
-        await message.reply(`${result.message}\n\n💡 **AI config is now active.** If you set a provider/model, make sure \`AI_BASE_URL\` is also correct (verify via "OpenCatz, what AI are you using?").`);
+        await safeReply(message, `${result.message}\n\n💡 **AI config is now active.** If you set a provider/model, make sure \`AI_BASE_URL\` is also correct (verify via "OpenCatz, what AI are you using?").`);
       } else {
         const result = await toolRegistry.executeToolCall('set_api_key', { keyName, keyValue });
-        await message.reply(`${result.message}\nSub-agent API key status re-evaluated.`);
+        await safeReply(message, `${result.message}\nSub-agent API key status re-evaluated.`);
       }
       return;
     }
@@ -169,7 +185,8 @@ export async function handleControlRoomMessage(
   // 1. Detect if user is asking for a Price Alert in Natural Language (e.g., "alert me when BTC hits 70k")
   const parsedAlert = priceAlertService.parseNaturalLanguageAlert(userQuery, message.author.id, message.channelId);
   if (parsedAlert) {
-    await message.reply(
+    await safeReply(
+      message,
       `🔔 **PRICE ALERT SET SUCCESSFULLY!**\n\n` +
       `• **Asset:** \`${parsedAlert.symbol}\`\n` +
       `• **Target Price:** \`$${parsedAlert.targetPriceUsd.toLocaleString()} USD\`\n` +
@@ -183,7 +200,7 @@ export async function handleControlRoomMessage(
   // 1b. Detect if user is asking to Bridge tokens (inform single-chain Robinhood focus)
   const isBridgeIntent = lowerQuery.includes('bridge') || lowerQuery.includes('bridging');
   if (isBridgeIntent && !lowerQuery.includes('swap') && !lowerQuery.includes('send') && !lowerQuery.includes('transfer')) {
-    await message.reply({
+    await safeReply(message, {
       content:
         `ℹ️ **OpenCatz AI is specialized natively for Robinhood Chain (EVM L2 #4663).**\n` +
         `Cross-chain bridging is disabled. For on-chain trading and transfers, use:\n` +
@@ -221,7 +238,7 @@ export async function handleControlRoomMessage(
         .setURL(result.explorerUrl || result.relayWebUrl)
     );
 
-    await message.reply({
+    await safeReply(message, {
       content:
         `🔄 **OPENCATZ RELAY.LINK SWAP DIRECT EXECUTION**\n\n` +
         `• **Swapping:** \`${result.amountIn} ${result.fromToken}\` ➡️ \`~${result.expectedAmountOut} ${result.toToken}\`\n` +
@@ -263,7 +280,7 @@ export async function handleControlRoomMessage(
         .setURL(result.explorerUrl || result.relayWebUrl)
     );
 
-    await message.reply({
+    await safeReply(message, {
       content:
         `📤 **OPENCATZ RELAY.LINK SEND DIRECT EXECUTION**\n\n` +
         `• **Sending:** \`${result.amountIn} ${result.tokenSymbol}\` to \`${shortAddr}\`\n` +
@@ -294,7 +311,7 @@ export async function handleControlRoomMessage(
     const memory = new SessionMemoryService();
     memory.recordAudit(matchedCa, 'EVM_TOKEN', 'robinhood', audit.success ? 80 : 0, audit.success ? 'REAL-TIME AUDIT' : 'UNAVAILABLE', `Audited ${matchedCa}`);
 
-    await message.reply(`🔎 **OPENCATZ ON-DEMAND TOKEN AUDIT REPORT**\n📌 **Target Contract:** \`${matchedCa}\` (${chainName})\n\n${audit.content}`);
+    await safeReply(message, `🔎 **OPENCATZ ON-DEMAND TOKEN AUDIT REPORT**\n📌 **Target Contract:** \`${matchedCa}\` (${chainName})\n\n${audit.content}`);
     return;
   }
 
